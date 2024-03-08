@@ -24,7 +24,7 @@ public class Product {
 
     @Column
     @Min(100)
-    private Integer price;
+    private Double price;
 
     @Column
     @Min(0)
@@ -40,7 +40,7 @@ public class Product {
 
 
     @Builder
-    public Product(String productName, Integer price, Integer quantity, String introduction, GoodsCategory category) {
+    public Product(String productName, Double price, Integer quantity, String introduction, GoodsCategory category) {
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
