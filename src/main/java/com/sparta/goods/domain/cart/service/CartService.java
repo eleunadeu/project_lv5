@@ -16,6 +16,8 @@ import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -69,6 +71,33 @@ public class CartService {
                 .build();
     }
 
+    // 조회
+    public CartResponse.CartResponseTotal getCart(Long cartId) {
+        Cart cart = cartRepository.findById(cartId).orElseThrow(
+                () -> new NullPointerException("장바구니가 존재하지 않습니다.")
+        );
+
+        List<CartItem> cartItemList = cart.getItems();
+        List<CartResponse> responseList = new ArrayList<>();
+        int totalPrice = 0;
+        for (CartItem item : cartItemList) {
+            responseList.add(CartResponse.builder()
+                    .cartQuantity(item.getQuantity())
+                    .productName(item.getProduct().getProductName())
+                    .introduction(item.getProduct().getIntroduction())
+                    .category(item.getProduct().getCategory())
+                    .price(item.getProduct().getPrice() * item.getQuantity())
+                    .build()
+            );
+            totalPrice += item.getProduct().getPrice() * item.getQuantity();
+        }
+
+        return CartResponse.CartResponseTotal.builder()
+                .cartItemList(responseList)
+                .totalPrice(totalPrice)
+                .build();
+    }
+
     // 수정
     @Transactional
     public void updateCartItemQuantity(CartRequest requestDto) {
@@ -112,5 +141,4 @@ public class CartService {
 
         cartItemRepository.delete(cartItem);
     }
-
 }

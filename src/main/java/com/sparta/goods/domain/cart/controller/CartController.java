@@ -20,7 +20,7 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    // 쟝뱌바구니 추가
+    // 장바구니 추가
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/cart")
     public ResponseEntity<CartResponse> addCartProduct(
@@ -29,6 +29,16 @@ public class CartController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(cartService.addCartProduct(cartRequest, userDetails));
     }
+
+    // 장바구니 조회
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @GetMapping("/cart/{cartId}")
+    public ResponseEntity<CartResponse.CartResponseTotal> getCart(
+            @PathVariable Long cartId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(cartService.getCart(cartId));
+    }
+
     // 장바구니 수정
     // @PreAuthorize("hasRole('USER')")
     // USER 사용자(인증된 사용자)만 액세스 가능

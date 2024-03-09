@@ -24,4 +24,17 @@ public class CartResponse {
         this.category = category;
         this.cartQuantity = cartQuantity;
     }
+
+    @Getter
+    @NoArgsConstructor
+    public static class CartResponseTotal {
+        private int totalPrice;
+        private List<CartResponse> cartItemList;
+
+        @Builder
+        public CartResponseTotal(int totalPrice, List<CartResponse> cartItemList) {
+            this.totalPrice = totalPrice;
+            this.cartItemList = cartItemList;
+        }
+    }
 }
