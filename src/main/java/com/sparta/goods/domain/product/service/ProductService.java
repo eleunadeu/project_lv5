@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,14 +63,29 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductResponse> getProducts(int page, int size, String sortBy, boolean isAsc) {
-        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
-        Sort sort = Sort.by(direction, sortBy);
-        Pageable pageable = PageRequest.of(page, size, sort);
+        // Query DSL
+        try {
+            // 페이지 인덱스와 크기에 대한 유효성 검증
+            if (page < 0 || size < 1) {
+                throw new IllegalArgumentException("페이지 번호와 크기는 양의 정수여야 합니다.");
+            }
 
-        Page<Product> productPage = productRepository.findAll(pageable);
+            Page<Product> productPage = productRepository.findProductsUsingQueryDsl(page, size, sortBy, isAsc);
+            return productPage.map(product -> new ProductResponse(product.getProductId(), product.getProductName(),
+                    product.getPrice(), product.getQuantity(), product.getIntroduction(), product.getCategory()));
+        } catch (IllegalArgumentException e) {
+            // 유효하지 않은 정렬 필드나 페이지 인덱스/크기에 대한 예외 처리
+            throw new IllegalArgumentException("요청 처리 중 오류가 발생했습니다: " + e.getMessage());
+        }
 
-        return productPage.map(product -> new ProductResponse(product.getProductId(), product.getProductName(),
-                product.getPrice(), product.getQuantity(), product.getIntroduction(), product.getCategory()));
-
+        // Query Methods
+//        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+//        Sort sort = Sort.by(direction, sortBy);
+//        Pageable pageable = PageRequest.of(page, size, sort);
+//
+//        Page<Product> productPage = productRepository.findAll(pageable);
+//
+//        return productPage.map(product -> new ProductResponse(product.getProductId(), product.getProductName(),
+//                product.getPrice(), product.getQuantity(), product.getIntroduction(), product.getCategory()));
     }
 }
