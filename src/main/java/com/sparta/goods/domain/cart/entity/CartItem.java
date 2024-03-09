@@ -5,11 +5,9 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "cart_item")
 @NoArgsConstructor
 public class CartItem {
@@ -35,7 +33,7 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public void updateCarProductQuantity(int quantity) {
-        this.quantity = quantity;
+    public void updateQuantity(int newQuantity) {
+        this.quantity = newQuantity;
     }
 }

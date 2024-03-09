@@ -10,4 +10,5 @@ public class CartResponse {
     private String introduction;
     private GoodsCategory category;
     private int cartQuantity;
+
 }

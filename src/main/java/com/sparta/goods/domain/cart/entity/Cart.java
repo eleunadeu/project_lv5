@@ -4,13 +4,11 @@ import com.sparta.goods.global.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "cart")
 @NoArgsConstructor
 public class Cart {
