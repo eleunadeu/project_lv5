@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "cart_item")
 @NoArgsConstructor
 public class CartItem {
@@ -15,12 +17,10 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
 
-    @Column
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
@@ -32,6 +32,10 @@ public class CartItem {
     public CartItem(Cart cart, Product product, Integer quantity) {
         this.cart = cart;
         this.product = product;
+        this.quantity = quantity;
+    }
+
+    public void updateCarProductQuantity(int quantity) {
         this.quantity = quantity;
     }
 }
