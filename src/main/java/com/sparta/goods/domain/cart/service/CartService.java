@@ -78,10 +78,12 @@ public class CartService {
 
     // 조회
     public CartResponse.CartResponseTotal getCart(Long cartId) {
+        // 장바구니 찾기
         Cart cart = cartRepository.findById(cartId).orElseThrow(
                 () -> new NullPointerException("장바구니가 존재하지 않습니다.")
         );
 
+        // 장바구니에 있는 상품 List -> responseDto
         List<CartItem> cartItemList = cart.getItems();
         List<CartResponse> responseList = new ArrayList<>();
         int totalPrice = 0;
