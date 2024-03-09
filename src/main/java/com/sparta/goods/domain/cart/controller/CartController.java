@@ -3,6 +3,7 @@ package com.sparta.goods.domain.cart.controller;
 import com.sparta.goods.domain.cart.dto.CartRequest;
 import com.sparta.goods.domain.cart.dto.CartResponse;
 import com.sparta.goods.domain.cart.service.CartService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,10 +23,11 @@ public class CartController {
     // 쟝뱌바구니 추가
     @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/cart")
-    public CartResponse addCartProduct(
+    public ResponseEntity<CartResponse> addCartProduct(
             @RequestBody CartRequest cartRequest,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return cartService.addCartProduct(cartRequest, userDetails);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(cartService.addCartProduct(cartRequest, userDetails));
     }
     // 장바구니 수정
     // @PreAuthorize("hasRole('USER')")

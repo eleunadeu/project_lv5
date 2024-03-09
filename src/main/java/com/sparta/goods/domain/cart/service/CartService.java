@@ -40,7 +40,7 @@ public class CartService {
 
     // 추가
     @Transactional
-    public CartResponse addCartProduct(CartRequest cartRequest, UserDetails userDetails) {
+    public CartResponse addCartProduct(CartRequest request, UserDetails userDetails) {
         // 사용자 정보 조회
         User user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
@@ -52,30 +52,21 @@ public class CartService {
             cartRepository.save(cart);
         }
 
-        // 장바구니에 상품 추가
-        Long productId = cartRequest.getProductId();
-        int selectedQuantity = cartRequest.getCartQuantity();
+        // 상품 조회
+        Product product = productRepository.findById(request.getProductId()).orElseThrow(
+                () -> new NullPointerException("Not Found")
+        );
 
-        // 주어진 상품 ID가 이미 장바구니에 있는지 확인
-        Optional<CartItem> existingCartItem = cart.getItems().stream()
-                .filter(item -> item.getProduct().getProductId().equals(productId))
-                .findFirst();
+        // 장바구니에 추가
+        cartItemRepository.save(new CartItem(cart, product, request.getCartQuantity()));
 
-        if (existingCartItem.isPresent()) {
-            // 상품이 이미 장바구니에 있으면 수량을 업데이트
-            CartItem cartItem = existingCartItem.get();
-            cartItem.increaseQuantity(selectedQuantity); // 수량 증가 메서드 호출
-            cartItemRepository.save(cartItem);
-        } else {
-            // 상품이 장바구니에 없으면 새로운 CartItem 생성
-            Product product = productRepository.findById(productId)
-                    .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
-            CartItem cartItem = new CartItem(cart, product, selectedQuantity);
-            cart.getItems().add(cartItem);
-            cartItemRepository.save(cartItem);
-        }
-
-        return new CartResponse();
+        return CartResponse.builder()
+                .cartQuantity(request.getCartQuantity())
+                .price(product.getPrice())
+                .introduction(product.getIntroduction())
+                .productName(product.getProductName())
+                .category(product.getCategory())
+                .build();
     }
 
     // 수정
