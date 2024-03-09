@@ -60,7 +60,12 @@ public class CartService {
         );
 
         // 장바구니에 추가
-        cartItemRepository.save(new CartItem(cart, product, request.getCartQuantity()));
+        CartItem cartItem = cartItemRepository.findCartItemByProduct(product);
+        if (cartItem == null) {
+            cartItemRepository.save(new CartItem(cart, product, request.getCartQuantity()));
+        } else {
+            cartItem.increaseQuantity(request.getCartQuantity());
+        }
 
         return CartResponse.builder()
                 .cartQuantity(request.getCartQuantity())
