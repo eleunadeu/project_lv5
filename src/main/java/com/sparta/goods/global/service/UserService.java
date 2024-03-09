@@ -7,6 +7,7 @@ import com.sparta.goods.global.entity.User;
 import com.sparta.goods.global.entity.UserRoleEnum;
 import com.sparta.goods.global.jwt.JwtUtil;
 import com.sparta.goods.global.repository.UserRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -72,7 +73,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserResponseDto loginUser(LoginRequestDto requestDto) {
+    public UserResponseDto loginUser(LoginRequestDto requestDto, HttpServletResponse response) {
         String email = requestDto.getEmail();
         String password = requestDto.getPassword();
 
@@ -84,6 +85,7 @@ public class UserService {
         }
 
         String token = jwtUtil.createToken(user.getEmail(), user.getRole());
+        jwtUtil.addJwtToCookie(token, response);
 
         return new UserResponseDto(token);
     }
@@ -92,7 +94,8 @@ public class UserService {
     public UserRoleEnum determineRoleByToken(String adminToken) {
         UserRoleEnum role = tokenRoleMap.get(adminToken);
         if (role == null) {
-            throw new IllegalArgumentException("관리자 권한이 유효하지 않아 등록이 불가능합니다.");
+            role = UserRoleEnum.USER;
+//            throw new IllegalArgumentException("관리자 권한이 유효하지 않아 등록이 불가능합니다.");
         }
         return role;
     }

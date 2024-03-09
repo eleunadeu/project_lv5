@@ -25,6 +25,7 @@ public class SignupRequestDto {
     private String address;
 
     private boolean admin = false;
+    @NotNull
     private String adminToken;
 
     public SignupRequestDto(String email, String password, String gender,

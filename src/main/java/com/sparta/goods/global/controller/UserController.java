@@ -4,6 +4,7 @@ import com.sparta.goods.global.dto.LoginRequestDto;
 import com.sparta.goods.global.dto.SignupRequestDto;
 import com.sparta.goods.global.dto.UserResponseDto;
 import com.sparta.goods.global.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    ResponseEntity<UserResponseDto> loginUser(@RequestBody LoginRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(requestDto));
+    ResponseEntity<UserResponseDto> loginUser(@RequestBody LoginRequestDto requestDto, HttpServletResponse response) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(requestDto, response));
     }
 }
