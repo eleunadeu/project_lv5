@@ -10,6 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "cart controller", description = "장바구니 컨트롤러")
+@Slf4j(topic = "장바구니 추가, 조회, 수정, 삭제")
 @RestController
 @RequestMapping("/api")
 public class CartController {
