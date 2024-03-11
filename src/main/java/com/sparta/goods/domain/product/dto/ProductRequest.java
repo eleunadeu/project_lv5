@@ -13,13 +13,13 @@ import lombok.Setter;
 public class ProductRequest {
 
     private String productName;
-    private Double price;
+    private int price;
     private Integer quantity;
     private String introduction;
     private GoodsCategory category;
 
     @Builder
-    public ProductRequest(String productName, Double price, Integer quantity,
+    public ProductRequest(String productName, int price, Integer quantity,
                           String introduction, GoodsCategory category) {
 
         this.productName = productName;
