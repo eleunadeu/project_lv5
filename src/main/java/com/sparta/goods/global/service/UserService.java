@@ -92,7 +92,7 @@ public class UserService {
     public UserRoleEnum determineRoleByToken(String adminToken) {
         UserRoleEnum role = tokenRoleMap.get(adminToken);
         if (role == null) {
-            throw new IllegalArgumentException("관리자 권한이 유효하지 않아 등록이 불가능합니다.");
+            return UserRoleEnum.USER;
         }
         return role;
     }
