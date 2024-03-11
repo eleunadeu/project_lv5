@@ -1,6 +1,5 @@
 package com.sparta.goods.domain.cart.entity;
 
-import com.sparta.goods.domain.product.entity.Product;
 import com.sparta.goods.global.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
